@@ -3,7 +3,7 @@ name: Create Release
 on:
   push:
     tags:
-      - 'v*' # Trigger when a commit is tagged with a new version. TODO: Use a filter pattern for major releases only.
+      - "v*" # Trigger when a commit is tagged with a new version. TODO: Use a filter pattern for major releases only.
 
 jobs:
   create_release:
@@ -25,10 +25,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        name: [
-            linux,
-            macos
-        ]
+        name: [linux, macos]
 
         include:
           - name: linux
@@ -41,14 +38,18 @@ jobs:
             asset_name: solana-verify-macos
     steps:
       - name: Checkout code
-        uses: actions/checkout@v1
-            
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt install -y pkg-config libudev-dev
+
       - name: Use Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
           toolchain: stable
-      
+
       - name: Build
         run: cargo build --release --locked
 
@@ -56,7 +57,7 @@ jobs:
         env:
           ASSET_NAME: ${{matrix.asset_name}}
           EXEC_PATH: ${{matrix.artifact_path}}
-        run: | 
+        run: |
           echo "asset name: ${ASSET_NAME} executable path: ${EXEC_PATH}"
           mv ${EXEC_PATH} ${ASSET_NAME}
 
