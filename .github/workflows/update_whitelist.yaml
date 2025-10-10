@@ -19,7 +19,7 @@ jobs:
       - uses: actions/create-github-app-token@v1
         id: generate-token
         with:
-          app-id: ${{ secrets.ROBO_PR_APP_ID }}
+          app-id: ${{ vars.ROBO_PR_APP_ID }}
           private-key: ${{ secrets.ROBO_PR_CLIENT_SECRET }}
 
       - name: Checkout repository
@@ -41,13 +41,7 @@ jobs:
           uv sync --all-extras --dev
 
       - name: Run generate_dockerfiles.py
-        run: |
-          # Check if CSV file exists and process it
-          if [ -f "versions.csv" ]; then
-            echo "Processing CSV file..."
-            uv run process_csv.py versions.csv
-          fi
-          uv run update_image_whitelist.py
+        run: uv run update_image_whitelist.py
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
