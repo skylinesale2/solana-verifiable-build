@@ -2,6 +2,9 @@ import re
 import re
 import requests
 import os
+import csv
+from pathlib import Path
+from process_csv import SolanaVersionProcessor
 
 github_token = os.environ.get('GITHUB_TOKEN')
 use_ghcr = os.environ.get('USE_GHCR', 'false').lower() == 'true'
@@ -29,6 +32,22 @@ def fetch_all_tags(repository):
         page += 1
 
     return all_tags
+
+def process_csv_input(csv_file_path: str) -> None:
+    """Process CSV file if provided."""
+    if not csv_file_path or not Path(csv_file_path).exists():
+        return
+    
+    logger.info(f"Processing CSV file: {csv_file_path}")
+    processor = SolanaVersionProcessor(csv_file_path)
+    processor.read_csv()
+    
+    if processor.validate_versions():
+        processor.write_dockerfiles()
+        logger.info("CSV processing completed, Dockerfiles updated")
+    else:
+        logger.error("CSV validation failed")
+        raise ValueError("Invalid CSV format")
 
 if use_ghcr:
     response = requests.get(

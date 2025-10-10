@@ -1,0 +1,5 @@
+version,dockerfile_path,base_image,additional_deps
+1.14.23,docker/v1.14.23.Dockerfile,ubuntu:20.04,
+1.15.2,docker/v1.15.2.Dockerfile,ubuntu:20.04,RUN apt-get install -y git
+1.16.1,docker/v1.16.1.Dockerfile,ubuntu:22.04,
+1.17.0,docker/v1.17.0.Dockerfile,ubuntu:22.04,RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -

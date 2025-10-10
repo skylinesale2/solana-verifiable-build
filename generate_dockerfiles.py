@@ -48,7 +48,7 @@ RUN curl -sSfL "https://release.solana.com/v1.18.20/install" -o solana_install.s
 ENV PATH="/root/.local/share/solana/install/active_release/bin:$PATH"
 WORKDIR /build
 CMD /bin/bash
-"""
+"""""""""
 
 # Dockerfile template for Agave
 base_dockerfile_agave = f"""
